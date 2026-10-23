@@ -23,6 +23,7 @@ changelog:
       labels:
         - dependencies
         - github-actions
+        - github_actions
         - chore
     - title: Other changes
       labels:
