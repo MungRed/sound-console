@@ -50,7 +50,7 @@ Sound Console is a small, self-contained WASAPI router built specifically for th
 - **Channel-pair picker** — supports multi-channel interfaces; 8-channel devices expose `1+2`, `3+4`, `5+6`, `7+8`.
 - **Multiple outputs** — route one input to up to eight playback devices, each with independent volume, mute, and level meter.
 - **Input gain and metering** — −24 to +12 dB in 0.5 dB steps, stereo peak meters, and a latched clip indicator.
-- **Latency presets** — 30, 40, 60, 100, or 160 ms safety buffer; 40 ms by default.
+- **Latency presets** — 20, 30, 40, 60, 100, or 160 ms safety buffer. The 20/30 ms settings also request a shorter 10 ms WASAPI render buffer; 40 ms remains the default.
 - **Shared and exclusive modes** — automatic fallback to shared mode when a device rejects exclusive access.
 - **Clock-drift tolerant** — a shared ring buffer plus cubic interpolation keeps independent capture/render clocks from accumulating delay; a 60-second soak test with a 44.1 kHz input and 96 kHz stream completed with zero dropouts.
 - **Desktop conveniences** — hot-plug detection, `F5` refresh, `Ctrl+Enter` start/stop, persistent settings, single-instance guard, error toast, and logs.
@@ -93,9 +93,38 @@ If a device does not support exclusive mode, Sound Console automatically falls b
 
 ### Latency guidance
 
-Actual latency depends on the USB driver, device period, buffer setting, and mode. Start with 40 ms in shared mode. For lower latency, try 30 ms with exclusive mode. Bluetooth and virtual devices usually need 60 ms or more.
+Latency is made up of several layers:
 
-This application is a PC-side router, not a zero-latency hardware monitor. For the lowest possible monitoring latency, use the modeller's direct monitoring or a dedicated ASIO interface.
+```text
+Ampero A/D + processing + USB transport
+  + WASAPI capture period
+  + Sound Console safety buffer
+  + WASAPI render buffer + device/DAC buffering
+  = what you hear
+```
+
+The application can control only the middle layers. The buffer tooltip shows a software-side estimate:
+
+| Safety buffer | Render buffer | Software-side estimate* | Typical use |
+| --- | --- | --- | --- |
+| 20 ms | 10 ms | ~40 ms | Low-latency wired monitoring, exclusive mode |
+| 30 ms | 10 ms | ~50 ms | Low-latency fallback |
+| 40 ms (default) | 20 ms | ~70 ms | Shared-mode daily use |
+| 60–160 ms | 20 ms | 90–190 ms | Bluetooth, virtual cables, maximum stability |
+
+\* Capture period (~10 ms) + safety buffer + requested render buffer. This is **not** a measured round-trip: USB transport, the effect processor, and the output device add further latency.
+
+For the lowest practical latency:
+
+1. Select **20 ms**.
+2. Enable **exclusive output**.
+3. Use a wired USB DAC/headphone output, ideally at 44.1 or 48 kHz.
+4. Stop other high-CPU/audio applications and avoid USB hubs.
+5. If you hear dropouts, move to 30 ms, then 40 ms.
+
+On the tested setup, the 20 ms + exclusive combination removes roughly 30 ms of software buffering compared with the 40 ms shared default. Expect a typical total around 50–70 ms with the modeller and hardware included — better for practice and streaming, but still not zero-latency monitoring.
+
+This application is a PC-side router, not a zero-latency hardware monitor. For the tightest playing feel, use the modeller's direct monitoring or a dedicated ASIO interface.
 
 ### Sending audio to OBS, a DAW, or a meeting app
 

@@ -28,6 +28,7 @@ public sealed class AudioRouterEngine : IDisposable
     private int _inputGainBits = BitConverter.SingleToInt32Bits(1f);
     private int _targetFrames;
     private int _bufferMilliseconds;
+    private int _outputBufferMilliseconds;
     private int _stateValue;
     private volatile bool _intentionalStop;
     private Exception? _captureFault;
@@ -47,6 +48,8 @@ public sealed class AudioRouterEngine : IDisposable
     public int InputChannels => _captureFormat?.Channels ?? 0;
 
     public int BufferMilliseconds => _bufferMilliseconds;
+
+    public int OutputBufferMilliseconds => _outputBufferMilliseconds;
 
     public IReadOnlyList<ActiveOutputInfo> ActiveOutputs
     {
@@ -217,7 +220,8 @@ public sealed class AudioRouterEngine : IDisposable
             $"input={InputName ?? "-"}/{InputSampleRate}Hz/{InputChannels}ch",
             $"captureFrames={CaptureFrames}",
             $"captureAge={LastCaptureAgeMs}ms",
-            $"buffer={_bufferMilliseconds}ms"
+            $"buffer={_bufferMilliseconds}ms",
+            $"outputBuffer={_outputBufferMilliseconds}ms"
         };
         foreach (var sink in sinks)
         {
@@ -259,8 +263,11 @@ public sealed class AudioRouterEngine : IDisposable
         _startRate = _captureFormat.SampleRate;
         _startChannels = _captureFormat.Channels;
         _bufferMilliseconds = Math.Clamp(request.BufferMilliseconds, 20, 300);
+        _outputBufferMilliseconds = AudioLatencyPolicy.GetOutputBufferMilliseconds(_bufferMilliseconds);
         _targetFrames = Math.Max(64, (int)(_startRate * (_bufferMilliseconds / 1000.0)));
         SetInputGainDb(request.InputGainDb);
+        AppLog.Info($"软件缓冲：应用 {_bufferMilliseconds}ms，输出设备 {_outputBufferMilliseconds}ms，" +
+                    $"预计软件侧约 {AudioLatencyPolicy.EstimateSoftwareLatencyMilliseconds(_bufferMilliseconds)}ms");
         _captureFrames = 0;
         _lastCaptureTick = 0;
 
@@ -291,7 +298,7 @@ public sealed class AudioRouterEngine : IDisposable
                         _buffer,
                         _startRate,
                         _targetFrames,
-                        latencyMs: 20,
+                        latencyMs: _outputBufferMilliseconds,
                         preferExclusive: request.PreferExclusive);
                     sink.UnexpectedStop += OnSinkStopped;
                     sinks.Add(sink);

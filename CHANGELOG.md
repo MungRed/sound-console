@@ -7,25 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.1.0] - 2026-10-23
+
 ### Added
 
-- Hardware-free xUnit coverage for channel mapping, PCM conversion, ring-buffer
-  behaviour, resampling, meters, settings, and sink output.
-- CI, release automation, Dependabot, issue forms, and pull request template.
-- Architecture, build, and troubleshooting documentation.
-- MIT license and third-party notices.
+- **20 ms low-latency safety-buffer preset** for wired, dedicated outputs.
+- Dynamic render buffering: 20/30 ms safety buffers now request a 10 ms WASAPI
+  render buffer instead of 20 ms.
+- A latency breakdown in the buffer tooltip, showing application, render, and
+  capture contributions without claiming a hardware round-trip measurement.
 
 ### Changed
 
 - Updated NAudio to 2.4.0, Microsoft.NET.Test.Sdk to 18.11.0, and
   xunit.runner.visualstudio to 4.0.1 after build, test, and live-route
   validation.
-
-### Fixed
-
-- Oversized capture blocks now advance the ring-buffer write position by the
-  original frame count, preserving correct absolute sample alignment.
-- Non-finite samples no longer trigger the clipping indicator.
+- Added unit coverage for the new latency policy.
 
 ## [1.0.0] - 2026-10-23
 
@@ -41,3 +40,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clock-drift-tolerant ring buffer with per-output cubic resampling.
 - Hot-plug detection, single-instance guard, error toasts, and local logs.
 - Self-contained single-file Windows x64 build.
+- Hardware-free xUnit coverage, CI/release automation, bilingual documentation,
+  and open-source project scaffolding.
+
+### Fixed
+
+- Oversized capture blocks now advance the ring-buffer write position by the
+  original frame count, preserving correct absolute sample alignment.
+- Non-finite samples no longer trigger the clipping indicator.
+
+[Unreleased]: https://github.com/MungRed/sound-console/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/MungRed/sound-console/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/MungRed/sound-console/releases/tag/v1.0.0

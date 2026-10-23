@@ -74,6 +74,20 @@ Capture and render hardware have independent clocks. Even a 20 ppm mismatch woul
 - Exclusive output tries 44.1, 48, and 96 kHz stereo float, falling back to the next candidate. If none succeeds, the sink is opened in shared mode and the UI receives a note.
 - Devices with more than two hardware channels (for example an 8-channel headset endpoint) are handled by opening a stereo stream and letting the Windows audio engine map it.
 
+### Latency budget
+
+`AudioLatencyPolicy` centralizes the software-side tradeoff:
+
+| Safety buffer | Requested render buffer |
+| --- | --- |
+| 20 ms | 10 ms |
+| 30 ms | 10 ms |
+| 40 ms and above | 20 ms |
+
+The UI estimates software-side latency as `capture period (≈10 ms) + safety buffer + render buffer`. It deliberately does not present this as a measured round trip: the instrument's A/D, DSP, USB transport, and the output device all add latency outside the application's control.
+
+The 20 ms preset is intended for a wired output in exclusive mode. It is not enabled by default because small buffers are more sensitive to USB and scheduler jitter.
+
 ## Threading and lifetime
 
 | Context | Responsibilities |
@@ -120,6 +134,7 @@ A device invalidation or unexpected `PlaybackStopped` schedules a fault path. Th
 - Meter peak/clip semantics.
 - Sink priming, output gain/mute, overflow resynchronization, and format metadata.
 - Settings normalization and output-preference lookup.
+- Software-latency policy for low-latency presets.
 - Error translation.
 
 The tests require no audio hardware and run in CI on `windows-latest`.

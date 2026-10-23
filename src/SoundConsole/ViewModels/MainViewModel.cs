@@ -52,14 +52,15 @@ public sealed class MainViewModel : ObservableObject
 
         BufferOptions =
         [
-            new BufferOption(30, "30 ms", "最低延迟，适合性能较好的设备"),
+            new BufferOption(20, "20 ms", "软件侧最低延迟，建议独占 + 有线输出"),
+            new BufferOption(30, "30 ms", "低延迟，建议独占 + 有线输出"),
             new BufferOption(40, "40 ms", "推荐，延迟与稳定性平衡"),
             new BufferOption(60, "60 ms", "更稳定，适合无线或虚拟设备"),
             new BufferOption(100, "100 ms", "高容错，优先保证不断音"),
             new BufferOption(160, "160 ms", "极高容错，延迟较明显")
         ];
         _selectedBuffer = BufferOptions.FirstOrDefault(option => option.Milliseconds == _settings.BufferMilliseconds)
-            ?? BufferOptions[1];
+            ?? BufferOptions.First(option => option.Milliseconds == 40);
 
         InputDevices = [];
         InputChannels = [];
@@ -201,6 +202,8 @@ public sealed class MainViewModel : ObservableObject
             {
                 OnPropertyChanged(nameof(BufferSummary));
                 OnPropertyChanged(nameof(SelectedBufferMsText));
+                OnPropertyChanged(nameof(LatencyEstimateText));
+                OnPropertyChanged(nameof(LatencyHint));
                 OnPropertyChanged(nameof(StatusDetail));
                 ScheduleSave();
             }
@@ -210,6 +213,22 @@ public sealed class MainViewModel : ObservableObject
     public string BufferSummary => $"{SelectedBuffer.Milliseconds} ms 安全缓冲";
 
     public string SelectedBufferMsText => $"{SelectedBuffer.Milliseconds} ms";
+
+    public string LatencyEstimateText =>
+        $"软件侧约 {AudioLatencyPolicy.EstimateSoftwareLatencyMilliseconds(SelectedBuffer.Milliseconds)} ms";
+
+    public string LatencyHint
+    {
+        get
+        {
+            var softwareMs = AudioLatencyPolicy.EstimateSoftwareLatencyMilliseconds(SelectedBuffer.Milliseconds);
+            var outputMs = AudioLatencyPolicy.GetOutputBufferMilliseconds(SelectedBuffer.Milliseconds);
+            return $"软件侧预计约 {softwareMs} ms：" +
+                   $"应用缓冲 {SelectedBuffer.Milliseconds} ms + 输出设备缓冲约 {outputMs} ms + 采集周期约 {AudioLatencyPolicy.CapturePeriodMilliseconds} ms。\n" +
+                   "实际总延迟还需加上 USB 传输、效果器处理和声卡/耳机自身缓冲。\n" +
+                   "低延迟组合：20 ms + 独占输出 + 有线 44.1/48 kHz 设备。";
+        }
+    }
 
     public string InputFormatText => SelectedInput is null
         ? "—"

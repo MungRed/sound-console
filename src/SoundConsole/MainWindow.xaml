@@ -334,13 +334,20 @@
                                         </Border>
                                     </Grid>
 
-                                    <TextBlock Text="安全缓冲" Style="{StaticResource FieldLabel}" Margin="1,13,0,5" />
+                                    <Grid Margin="1,13,1,5">
+                                        <TextBlock Text="安全缓冲" Style="{StaticResource FieldLabel}" Margin="0" />
+                                        <TextBlock Text="{Binding LatencyEstimateText}" Style="{StaticResource MicroLabel}"
+                                                   FontSize="9" HorizontalAlignment="Right" Margin="0,1,0,0"
+                                                   ToolTip="{Binding LatencyHint}" />
+                                    </Grid>
                                     <ComboBox Style="{StaticResource DarkComboBox}" Height="40"
                                               ItemsSource="{Binding BufferOptions}"
                                               SelectedItem="{Binding SelectedBuffer, Mode=TwoWay}"
                                               IsEnabled="{Binding CanEditRouting}"
                                               DisplayMemberPath="Label"
-                                              ToolTip="缓冲越大越稳定；越小延迟越低" />
+                                              ToolTip="{Binding LatencyHint}"
+                                              AutomationProperties.Name="安全缓冲"
+                                              AutomationProperties.HelpText="{Binding LatencyHint}" />
                                     <TextBlock Text="{Binding SelectedBuffer.Description}" Style="{StaticResource SmallText}"
                                                Margin="1,4,0,0" FontSize="10.5" />
 

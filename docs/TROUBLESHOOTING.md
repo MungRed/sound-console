@@ -62,11 +62,13 @@ A single dropout at startup is suppressed by the application. If the counter kee
 
 ## 7. Latency feels too high
 
-- Use 30 ms instead of 40 ms, then try 60 ms if unstable.
-- Use exclusive mode on a dedicated output.
+- Use **20 ms + exclusive mode + a wired output** for the lowest software-side latency.
+- If 20 ms is unstable, try 30 ms, then 40 ms. The buffer tooltip shows the estimated software contribution.
+- Use exclusive mode on a dedicated output instead of shared mode.
 - Prefer a wired USB DAC/headphone output over Bluetooth.
-- A 44.1 kHz input and a native 44.1 kHz output avoid resampling in the device chain.
-- Remember that USB buffering, the effect processor's internal processing, and the Windows audio engine all add latency. For zero-latency performance, monitor directly through the effect processor.
+- A 44.1 kHz input and a native 44.1/48 kHz output avoid extra resampling in the device chain.
+- Remember that USB buffering, the effect processor's internal processing, and the output device all add latency. On a typical setup the 20 ms preset lands around 50–70 ms end to end — noticeably better than the 40 ms shared default, but not zero-latency monitoring.
+- For the tightest playing feel, monitor directly through the effect processor or use a dedicated ASIO interface.
 
 ## 8. Sending audio to OBS / a DAW / Discord
 
