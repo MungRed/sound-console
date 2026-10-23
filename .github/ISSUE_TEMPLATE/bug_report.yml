@@ -1,0 +1,107 @@
+name: Bug report
+description: Report a reproducible problem with audio routing, devices, the UI, or packaging.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Sound Console. Please read the troubleshooting guide first:
+        https://github.com/MungRed/sound-console/blob/main/docs/TROUBLESHOOTING.md
+
+        Do not include passwords, personal paths, or sensitive information in logs.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I read the troubleshooting guide and checked the input meter.
+          required: true
+        - label: I am using the latest release or a recent build from main.
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Sound Console version
+      description: Shown in the footer, e.g. v1.0.0.
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      description: Run `winver` and copy the version/build.
+      placeholder: Windows 11 24H2 (26100.xxxx)
+    validations:
+      required: true
+
+  - type: input
+    id: hardware
+    attributes:
+      label: Audio hardware and driver
+      description: Interface, connection path, and driver/firmware version.
+      placeholder: Ampero II Stomp, direct USB, firmware 1.x
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Output mode
+      options:
+        - Shared
+        - Exclusive
+        - Both / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: settings
+    attributes:
+      label: Route settings
+      description: Input channel pair, output device(s), and safety buffer.
+      placeholder: Channels 1+2 → TOPPING USB DAC, 40 ms
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact actions that trigger the problem.
+      placeholder: |
+        1. Connect ...
+        2. Select ...
+        3. Press Start ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include whether the input and output meters moved.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and screenshots
+      description: Paste relevant lines from %LOCALAPPDATA%\SoundConsole\logs\ after removing personal information.
+      render: text
+    validations:
+      required: false

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use Sound Console in a project or publication, please cite it using this metadata."
+title: "Sound Console (Signal Desk)"
+abstract: "A Windows/WASAPI audio-routing console for USB audio interfaces and guitar modellers."
+authors:
+  - family-names: MungRed
+    given-names: MungRed
+    website: "https://github.com/MungRed"
+version: 1.0.0
+date-released: "2026-10-23"
+license: MIT
+repository-code: "https://github.com/MungRed/sound-console"
+url: "https://github.com/MungRed/sound-console"
+keywords:
+  - audio-routing
+  - wasapi
+  - windows
+  - wpf
+  - naudio
+  - ampero
+  - guitar

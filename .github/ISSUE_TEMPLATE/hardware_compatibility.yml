@@ -1,0 +1,63 @@
+name: "Request: hardware compatibility report"
+description: Share a tested device combination so compatibility can be documented.
+title: "[Hardware]: "
+labels: ["hardware", "documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to report a device that works (or does not work) with Sound Console.
+        Please do not paste sensitive personal information or full local paths.
+
+  - type: input
+    id: interface
+    attributes:
+      label: Input interface
+      description: Model, firmware, and connection path.
+      placeholder: Ampero II Stomp, firmware 1.x, direct USB
+    validations:
+      required: true
+
+  - type: input
+    id: output
+    attributes:
+      label: Output device(s)
+      description: Model and connection type.
+      placeholder: TOPPING USB DAC over USB
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version/build
+    validations:
+      required: true
+
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result
+      options:
+        - Works well
+        - Works with caveats
+        - Does not work
+    validations:
+      required: true
+
+  - type: input
+    id: settings
+    attributes:
+      label: Settings used
+      description: Channel pair, output mode, and buffer.
+      placeholder: 1+2, shared, 40 ms
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Dropouts, latency impression, exclusive-mode fallback, or other observations.
+    validations:
+      required: false

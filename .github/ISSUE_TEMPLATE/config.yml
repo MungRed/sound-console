@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Troubleshooting guide
+    url: https://github.com/MungRed/sound-console/blob/main/docs/TROUBLESHOOTING.md
+    about: Check input metering, channel mapping, exclusive-mode fallback, and virtual cables first.
+  - name: Security report
+    url: https://github.com/MungRed/sound-console/security/advisories/new
+    about: Please report vulnerabilities privately instead of opening a public issue.
+  - name: Contributing guide
+    url: https://github.com/MungRed/sound-console/blob/main/CONTRIBUTING.md
+    about: Build instructions, coding conventions, and pull request expectations.
