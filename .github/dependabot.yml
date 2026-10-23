@@ -13,6 +13,12 @@ updates:
       dotnet-dependencies:
         patterns:
           - "*"
+    ignore:
+      # NAudio 3 changes ISampleProvider and deprecates the WASAPI builder API.
+      # The upgrade needs its own audio verification pass and should not block 1.0.x.
+      - dependency-name: NAudio
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
