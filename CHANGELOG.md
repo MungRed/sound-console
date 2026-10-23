@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Architecture, build, and troubleshooting documentation.
 - MIT license and third-party notices.
 
+### Changed
+
+- Updated NAudio to 2.4.0, Microsoft.NET.Test.Sdk to 18.11.0, and
+  xunit.runner.visualstudio to 4.0.1 after build, test, and live-route
+  validation.
+
 ### Fixed
 
 - Oversized capture blocks now advance the ring-buffer write position by the

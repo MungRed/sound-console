@@ -5,12 +5,12 @@ third-party software and standards.
 
 ## NAudio
 
-- Package: `NAudio` 2.2.1 and its NAudio.* packages
+- Package: `NAudio` 2.4.0 and its NAudio.* packages
 - Project: <https://github.com/naudio/NAudio>
 - License: MIT
 
 ```text
-Copyright 2020 Mark Heath
+Copyright 2008-2026 Mark Heath
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
